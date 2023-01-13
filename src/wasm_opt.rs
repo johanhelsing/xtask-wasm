@@ -38,6 +38,11 @@ fn download_wasm_opt() -> Result<&'static Path> {
                 log::info!("Downloading wasm-opt");
                 Ok(cache
                     .download(true, "wasm-opt", binaries, &WASM_OPT_URL)
+                    .map_err(|err| {
+                        log::info!("{:?}", err);
+                        log::info!("{:?}", err.root_cause());
+                        err
+                    })
                     .with_context(|| {
                         format!("could not download wasm-opt: {}", &WASM_OPT_URL.as_str())
                     })?
